@@ -1,48 +1,165 @@
 import React, { useRef, useState, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Box, Cylinder, Text } from '@react-three/drei';
+import { OrbitControls, Box, Cylinder, Text, RoundedBox, Cone } from '@react-three/drei';
 import { motion } from 'framer-motion';
+import * as THREE from 'three';
+
+// Broad 3D leaf with center crease matching reference image
+const BroadLeaf = ({ scale = 1, rotation = [0, 0, 0], position = [0, 0, 0], color = "#8ee000" }) => {
+  const leftHalfShape = useMemo(() => {
+    const shape = new THREE.Shape();
+    shape.moveTo(0, 0);
+    shape.bezierCurveTo(-0.36, 0.35, -0.4, 0.95, 0, 1.55);
+    shape.lineTo(0, 0);
+    return shape;
+  }, []);
+
+  const rightHalfShape = useMemo(() => {
+    const shape = new THREE.Shape();
+    shape.moveTo(0, 0);
+    shape.lineTo(0, 1.55);
+    shape.bezierCurveTo(0.4, 0.95, 0.36, 0.35, 0, 0);
+    return shape;
+  }, []);
+
+  const extrudeSettings = useMemo(() => ({
+    depth: 0.02,
+    bevelEnabled: true,
+    bevelSegments: 3,
+    steps: 1,
+    bevelSize: 0.015,
+    bevelThickness: 0.015,
+  }), []);
+
+  return (
+    <group position={position} rotation={rotation} scale={scale}>
+      {/* Left wing - angled slightly for central V-groove */}
+      <mesh rotation={[0, 0.16, 0]}>
+        <extrudeGeometry args={[leftHalfShape, extrudeSettings]} />
+        <meshStandardMaterial color={color} roughness={0.35} metalness={0.05} side={THREE.DoubleSide} />
+      </mesh>
+      {/* Right wing - angled slightly for central V-groove */}
+      <mesh rotation={[0, -0.16, 0]}>
+        <extrudeGeometry args={[rightHalfShape, extrudeSettings]} />
+        <meshStandardMaterial color={color} roughness={0.35} metalness={0.05} side={THREE.DoubleSide} />
+      </mesh>
+      {/* Subtle center spine */}
+      <Cylinder args={[0.012, 0.006, 1.55, 8]} position={[0, 0.77, 0.015]}>
+        <meshStandardMaterial color="#65a30d" roughness={0.4} />
+      </Cylinder>
+    </group>
+  );
+};
+
+// Detailed Potted Plant matching reference photo exactly
+const DetailedPottedPlant = ({ position = [2.3, -1, 0.9], rotation = [0, -0.2, 0] }) => {
+  return (
+    <group position={position} rotation={rotation}>
+      {/* Top White Rim / Collar */}
+      <Cylinder args={[0.54, 0.5, 0.16, 32]} position={[0, 0.72, 0]}>
+        <meshStandardMaterial color="#f8fafc" roughness={0.25} />
+      </Cylinder>
+
+      {/* Soil */}
+      <Cylinder args={[0.43, 0.41, 0.08, 32]} position={[0, 0.69, 0]}>
+        <meshStandardMaterial color="#382115" roughness={0.9} />
+      </Cylinder>
+
+      {/* Upper Pot Body (Taupe Ceramic) */}
+      <Cylinder args={[0.48, 0.43, 0.22, 32]} position={[0, 0.53, 0]}>
+        <meshStandardMaterial color="#b39a85" roughness={0.4} />
+      </Cylinder>
+
+      {/* Middle White Stripe */}
+      <Cylinder args={[0.43, 0.4, 0.14, 32]} position={[0, 0.35, 0]}>
+        <meshStandardMaterial color="#f8fafc" roughness={0.25} />
+      </Cylinder>
+
+      {/* Lower Pot Body (Taupe Ceramic) */}
+      <Cylinder args={[0.4, 0.35, 0.22, 32]} position={[0, 0.17, 0]}>
+        <meshStandardMaterial color="#b39a85" roughness={0.4} />
+      </Cylinder>
+
+      {/* Bottom White Base Ring */}
+      <Cylinder args={[0.35, 0.33, 0.08, 32]} position={[0, 0.04, 0]}>
+        <meshStandardMaterial color="#f8fafc" roughness={0.25} />
+      </Cylinder>
+
+      {/* --- Leaves (Arranged like photo) --- */}
+      {/* 1. Main Center Leaf - Tallest, standing upright with slight backward arch */}
+      <BroadLeaf 
+        position={[0, 0.72, -0.04]} 
+        rotation={[-0.15, 0, 0.04]} 
+        scale={1.15} 
+        color="#94e60b" 
+      />
+
+      {/* 2. Left Leaf - Splaying out to the left */}
+      <BroadLeaf 
+        position={[-0.12, 0.7, 0.02]} 
+        rotation={[0.15, 0.22, 0.42]} 
+        scale={0.96} 
+        color="#84d60a" 
+      />
+
+      {/* 3. Right Leaf - Lower, arching broadly to the right */}
+      <BroadLeaf 
+        position={[0.12, 0.68, 0.05]} 
+        rotation={[-0.12, -0.22, -0.55]} 
+        scale={0.92} 
+        color="#78c808" 
+      />
+
+      {/* 4. Front Center Leaf - Fresh sprout arching towards viewer */}
+      <BroadLeaf 
+        position={[0, 0.7, 0.12]} 
+        rotation={[0.35, 0, -0.05]} 
+        scale={0.78} 
+        color="#a3f018" 
+      />
+
+      {/* 5. Back Leaf - Adding lush fullness behind */}
+      <BroadLeaf 
+        position={[-0.06, 0.72, -0.1]} 
+        rotation={[-0.28, 0.25, 0.15]} 
+        scale={0.86} 
+        color="#70be06" 
+      />
+    </group>
+  );
+};
 
 // Particle system for music notes
 const MusicNotes = () => {
-  const notesRef = useRef([]);
+  const group = useRef();
   const notes = useMemo(() => Array.from({ length: 5 }).map(() => ({
-    x: 1.2 + (Math.random() - 0.5) * 0.5,
-    y: 1.5 + Math.random() * 0.5,
-    z: -0.2 + (Math.random() - 0.5) * 0.2,
-    speed: 0.8 + Math.random() * 0.5,
-    char: Math.random() > 0.5 ? '♪' : '♫',
+    x: 1.3 + (Math.random() - 0.5) * 0.5,
+    y: 1.5 + Math.random(),
+    z: -0.4 + (Math.random() - 0.5) * 0.5,
+    speed: 0.5 + Math.random() * 0.5,
+    offset: Math.random() * Math.PI * 2,
   })), []);
 
   useFrame((state, delta) => {
-    notesRef.current.forEach((mesh, i) => {
+    notes.forEach((note, i) => {
+      const mesh = group.current.children[i];
       if (mesh) {
-        notes[i].y += notes[i].speed * delta;
-        if (notes[i].y > 4.0) {
-          notes[i].y = 1.5;
-          notes[i].x = 1.2 + (Math.random() - 0.5) * 0.5;
+        note.y += note.speed * delta;
+        note.x += Math.sin(state.clock.elapsedTime * 2 + note.offset) * 0.01;
+        if (note.y > 3) {
+          note.y = 1.5;
+          note.x = 1.3 + (Math.random() - 0.5) * 0.5;
         }
-        mesh.position.y = notes[i].y;
-        mesh.position.x = notes[i].x;
-        mesh.material.opacity = 1 - (notes[i].y - 1.5) / 2.5;
+        mesh.position.set(note.x, note.y, note.z);
       }
     });
   });
 
   return (
-    <group>
-      {notes.map((note, i) => (
-        <Text
-          key={i}
-          ref={(el) => (notesRef.current[i] = el)}
-          position={[note.x, note.y, note.z]}
-          fontSize={0.6}
-          color="#f59e0b"
-          outlineWidth={0.02}
-          outlineColor="#78350f"
-          material-transparent
-        >
-          {note.char}
+    <group ref={group}>
+      {notes.map((_, i) => (
+        <Text key={i} fontSize={0.6} color="#f97316" outlineWidth={0.02} outlineColor="#000000">
+          ♪
         </Text>
       ))}
     </group>
@@ -62,9 +179,41 @@ const RGBKeyboard = () => {
   });
 
   return (
-    <Box args={[1.2, 0.05, 0.4]} position={[0, 1.12, 0.3]} rotation={[0.05, 0, 0]}>
+    <RoundedBox args={[1.2, 0.05, 0.4]} radius={0.02} position={[0, 1.12, 0.3]} rotation={[0.05, 0, 0]}>
       <meshStandardMaterial ref={materialRef} emissiveIntensity={1} roughness={0.2} />
-    </Box>
+    </RoundedBox>
+  );
+};
+
+// Simulated Syntax Highlighting Code Lines
+const CodeLines = () => {
+  const lines = [
+    { width: 0.6, color: '#f472b6', y: 0 },
+    { width: 0.8, color: '#f472b6', y: -0.08 },
+    { width: 0.4, color: '#f472b6', y: -0.16 },
+    { width: 0.7, color: '#a3e635', y: -0.24 },
+    { width: 0.9, color: '#a3e635', y: -0.32 },
+    { width: 0.6, color: '#a3e635', y: -0.40 },
+    { width: 0.8, color: '#fb923c', y: -0.48 },
+    { width: 0.5, color: '#fb923c', y: -0.56 },
+    { width: 0.9, color: '#9ca3af', y: -0.72 }, // gap before
+    { width: 0.6, color: '#c084fc', y: -0.80 },
+    { width: 0.8, color: '#c084fc', y: -0.88 },
+    { width: 1.2, color: '#fbbf24', y: -0.96 }, // long yellow line
+    { width: 0.5, color: '#fb923c', y: -1.04 },
+    { width: 0.7, color: '#a3e635', y: -1.2 },
+    { width: 0.6, color: '#a3e635', y: -1.28 },
+    { width: 0.4, color: '#f472b6', y: -1.36 },
+  ];
+
+  return (
+    <group position={[-0.8, 2.3, -0.42]} rotation={[0.05, 0, 0]}>
+      {lines.map((line, i) => (
+        <Box key={i} args={[line.width, 0.03, 0.01]} position={[line.width / 2, line.y, 0]}>
+          <meshBasicMaterial color={line.color} />
+        </Box>
+      ))}
+    </group>
   );
 };
 
@@ -75,62 +224,67 @@ const AbstractDesk = () => {
     group.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.2) * 0.1;
   });
 
-  const codeText = `function code() {\n  return "awesome";\n}`;
-
   return (
     <group ref={group} position={[0, -1.5, 0]}>
       {/* Desk Base */}
-      <Box args={[4, 0.2, 2]} position={[0, 1, 0]}>
-        <meshStandardMaterial color="#f472b6" /> {/* Pink */}
+      <RoundedBox args={[4, 0.2, 2]} radius={0.05} position={[0, 1, 0]}>
+        <meshStandardMaterial color="#f472b6" roughness={0.3} />
+      </RoundedBox>
+      {/* Desk Drawer */}
+      <RoundedBox args={[1.5, 0.4, 1.8]} radius={0.05} position={[1, 0.7, 0]}>
+        <meshStandardMaterial color="#fbcfe8" roughness={0.4} />
+      </RoundedBox>
+      <Box args={[0.4, 0.05, 0.05]} position={[1, 0.7, 0.92]}>
+        <meshStandardMaterial color="#9ca3af" />
       </Box>
+      
       {/* Desk Legs */}
-      <Cylinder args={[0.08, 0.08, 2]} position={[-1.8, 0, -0.8]}>
-        <meshStandardMaterial color="#fbcfe8" /> {/* Lighter Pink */}
-      </Cylinder>
-      <Cylinder args={[0.08, 0.08, 2]} position={[1.8, 0, -0.8]}>
+      <Cylinder args={[0.06, 0.04, 2]} position={[-1.8, 0, -0.8]}>
         <meshStandardMaterial color="#fbcfe8" />
       </Cylinder>
-      <Cylinder args={[0.08, 0.08, 2]} position={[-1.8, 0, 0.8]}>
+      <Cylinder args={[0.06, 0.04, 2]} position={[1.8, 0, -0.8]}>
         <meshStandardMaterial color="#fbcfe8" />
       </Cylinder>
-      <Cylinder args={[0.08, 0.08, 2]} position={[1.8, 0, 0.8]}>
+      <Cylinder args={[0.06, 0.04, 2]} position={[-1.8, 0, 0.8]}>
+        <meshStandardMaterial color="#fbcfe8" />
+      </Cylinder>
+      <Cylinder args={[0.06, 0.04, 2]} position={[1.8, 0, 0.8]}>
         <meshStandardMaterial color="#fbcfe8" />
       </Cylinder>
       
       {/* Monitor Base */}
-      <Box args={[0.3, 0.1, 0.3]} position={[0, 1.1, -0.5]}>
-        <meshStandardMaterial color="#4b5563" />
+      <Box args={[0.4, 0.05, 0.3]} position={[0, 1.12, -0.5]}>
+        <meshStandardMaterial color="#374151" />
       </Box>
       <Cylinder args={[0.05, 0.05, 0.4]} position={[0, 1.3, -0.5]}>
         <meshStandardMaterial color="#4b5563" />
       </Cylinder>
       {/* Monitor Screen */}
-      <Box args={[2, 1.2, 0.1]} position={[0, 1.8, -0.5]} rotation={[0.05, 0, 0]}>
+      <RoundedBox args={[2.2, 1.4, 0.1]} radius={0.05} position={[0, 1.8, -0.5]} rotation={[0.05, 0, 0]}>
+        <meshStandardMaterial color="#374151" />
+      </RoundedBox>
+      <Box args={[2.1, 1.3, 0.11]} position={[0, 1.8, -0.5]} rotation={[0.05, 0, 0]}>
         <meshStandardMaterial color="#1f2937" />
       </Box>
-      <Box args={[1.9, 1.1, 0.11]} position={[0, 1.8, -0.5]} rotation={[0.05, 0, 0]}>
-        <meshStandardMaterial color="#000000" />
-      </Box>
+      
       {/* Code on screen */}
-      <Text position={[-0.8, 2.1, -0.42]} rotation={[0.05, 0, 0]} fontSize={0.12} color="#10b981" anchorX="left" anchorY="top">
-        {codeText}
-      </Text>
+      <CodeLines />
 
       {/* Keyboard */}
       <RGBKeyboard />
       
       {/* Mouse */}
-      <Box args={[0.15, 0.08, 0.25]} position={[0.9, 1.14, 0.3]} rotation={[0, -0.1, 0]}>
+      <RoundedBox args={[0.12, 0.06, 0.2]} radius={0.03} position={[0.9, 1.14, 0.3]} rotation={[0, -0.1, 0]}>
         <meshStandardMaterial color="#4b5563" />
-      </Box>
+      </RoundedBox>
 
       {/* Speaker */}
-      <Box args={[0.3, 0.5, 0.3]} position={[1.3, 1.35, -0.4]} rotation={[0, -0.2, 0]}>
-        <meshStandardMaterial color="#1f2937" />
-      </Box>
+      <RoundedBox args={[0.3, 0.5, 0.3]} radius={0.05} position={[1.4, 1.35, -0.4]} rotation={[0, -0.2, 0]}>
+        <meshStandardMaterial color="#f59e0b" />
+      </RoundedBox>
       {/* Speaker Cone */}
-      <Cylinder args={[0.1, 0.1, 0.31]} position={[1.3, 1.4, -0.4]} rotation={[Math.PI / 2, -0.2, 0]}>
-        <meshStandardMaterial color="#374151" />
+      <Cylinder args={[0.1, 0.1, 0.31]} position={[1.4, 1.4, -0.4]} rotation={[Math.PI / 2, -0.2, 0]}>
+        <meshStandardMaterial color="#fffbeb" />
       </Cylinder>
       
       {/* Music Notes Emitter */}
@@ -139,37 +293,46 @@ const AbstractDesk = () => {
       {/* Chair */}
       <group position={[0, -1, 1.5]} rotation={[0, 0.2, 0]}>
         {/* Seat */}
-        <Box args={[1.2, 0.1, 1.2]} position={[0, 0.8, 0]}>
-          <meshStandardMaterial color="#f472b6" /> {/* Pink */}
-        </Box>
+        <RoundedBox args={[1.2, 0.15, 1.2]} radius={0.05} position={[0, 0.8, 0]}>
+          <meshStandardMaterial color="#f472b6" />
+        </RoundedBox>
         {/* Backrest */}
-        <Box args={[1.2, 1.2, 0.1]} position={[0, 1.4, 0.55]}>
-          <meshStandardMaterial color="#f472b6" /> {/* Pink */}
+        <RoundedBox args={[1.2, 1.2, 0.15]} radius={0.05} position={[0, 1.4, 0.55]}>
+          <meshStandardMaterial color="#f472b6" />
+        </RoundedBox>
+        {/* Armrests */}
+        <Box args={[0.1, 0.6, 0.8]} position={[-0.55, 1.1, 0.1]}>
+          <meshStandardMaterial color="#fbcfe8" />
         </Box>
-        {/* Leg */}
-        <Cylinder args={[0.1, 0.1, 0.8]} position={[0, 0.4, 0]}>
-          <meshStandardMaterial color="#fbcfe8" /> {/* Lighter Pink */}
+        <Box args={[0.1, 0.6, 0.8]} position={[0.55, 1.1, 0.1]}>
+          <meshStandardMaterial color="#fbcfe8" />
+        </Box>
+        {/* Central Leg */}
+        <Cylinder args={[0.1, 0.1, 0.7]} position={[0, 0.45, 0]}>
+          <meshStandardMaterial color="#4b5563" />
         </Cylinder>
         {/* Base */}
-        <Cylinder args={[0.6, 0.6, 0.05]} position={[0, 0.05, 0]}>
-          <meshStandardMaterial color="#111827" />
+        <Cylinder args={[0.6, 0.6, 0.1]} position={[0, 0.05, 0]}>
+          <meshStandardMaterial color="#1f2937" />
         </Cylinder>
       </group>
 
-      {/* Plant */}
-      <group position={[-2.5, -1, -0.5]}>
-        {/* Pot */}
-        <Cylinder args={[0.4, 0.3, 0.6]} position={[0, 0.3, 0]}>
-          <meshStandardMaterial color="#d1d5db" />
+      {/* Wastebasket (Left side of desk as in reference) */}
+      <group position={[-2.3, -1, 0.2]}>
+        <Cylinder args={[0.28, 0.22, 0.65, 24]} position={[0, 0.325, 0]}>
+          <meshStandardMaterial color="#e2e8f0" roughness={0.3} />
         </Cylinder>
-        {/* Leaves */}
-        <Box args={[0.8, 0.8, 0.8]} position={[0, 0.9, 0]}>
-          <meshStandardMaterial color="#84cc16" />
-        </Box>
-        <Box args={[0.6, 0.6, 0.6]} position={[0.2, 1.2, -0.2]} rotation={[0.2, 0.4, 0]}>
-          <meshStandardMaterial color="#a3e635" />
-        </Box>
+        {/* Rolled Paper / Blueprints */}
+        <Cylinder args={[0.04, 0.04, 0.8, 16]} position={[-0.06, 0.5, 0]} rotation={[0.2, 0, 0.2]}>
+          <meshStandardMaterial color="#93c5fd" />
+        </Cylinder>
+        <Cylinder args={[0.035, 0.035, 0.7, 16]} position={[0.06, 0.45, -0.04]} rotation={[-0.15, 0, -0.2]}>
+          <meshStandardMaterial color="#fef08a" />
+        </Cylinder>
       </group>
+
+      {/* Detailed Potted Plant (Front-right side of desk exactly as in reference image) */}
+      <DetailedPottedPlant position={[2.35, -1, 0.95]} rotation={[0, -0.3, 0]} />
 
       {/* Rug (Moved down to y=-1, which is the bottom of the legs) */}
       <Box args={[7, 0.05, 5]} position={[0, -0.95, 1.5]}>
@@ -266,17 +429,17 @@ const AbstractDesk = () => {
 
 const Hero = () => {
   return (
-    <section id="home" className="h-screen bg-[#f4ece3] flex flex-col md:flex-row items-center justify-between px-6 md:px-12 overflow-hidden relative">
+    <section id="home" className="h-screen bg-[#f4ece3] flex flex-col md:flex-row items-center justify-between px-4 md:pl-2 md:pr-8 overflow-hidden relative">
       
       {/* Left Content */}
-      <div className="w-full md:w-[60%] z-10 flex flex-col justify-center h-full relative pl-0 mt-20 md:mt-0">
+      <div className="w-full md:w-[50%] z-10 flex flex-col justify-center h-full relative pl-0 mt-20 md:mt-0">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="flex flex-col items-start ml-0 md:-ml-16"
+          className="flex flex-col items-start ml-0 md:-ml-44"
         >
-          <h1 className="text-7xl md:text-[8rem] font-bold text-black/10 leading-[0.8] tracking-tighter mb-8">
+          <h1 className="text-7xl md:text-[8rem] font-bold text-gray-800 leading-[0.8] tracking-tighter mb-8">
             Ly Tieu
             <br />
             Long
@@ -291,11 +454,12 @@ const Hero = () => {
       </div>
       
       {/* Right Content - 3D Scene */}
-      <div className="w-full md:w-[50%] h-[60vh] md:h-screen absolute right-0 bottom-0 md:top-0 cursor-grab active:cursor-grabbing z-0">
+      <div className="w-full md:w-[52%] h-[60vh] md:h-screen absolute right-0 md:-right-6 bottom-0 md:-top-8 cursor-grab active:cursor-grabbing z-0">
         <Canvas camera={{ position: [5, 4, 6], fov: 50 }}>
           <ambientLight intensity={0.7} />
           <directionalLight position={[10, 10, 5]} intensity={1.5} castShadow />
-          <group position={[0, -0.2, 0]}>
+          {/* Shifted up (Y) and left (X/Z) */}
+          <group position={[-0.4, 0.35, 0.2]}>
             <AbstractDesk />
           </group>
           <OrbitControls enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 4} />

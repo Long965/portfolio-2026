@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Volume2 } from 'lucide-react';
+import { Volume2, VolumeX } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const Navbar = () => {
+const Navbar = ({ isMuted, setIsMuted }) => {
   const [activeSection, setActiveSection] = useState('home');
 
   const navLinks = [
@@ -28,8 +28,8 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 py-4 md:py-6">
-      <div className="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between">
+    <nav className="fixed top-0 left-0 right-0 z-50 py-4 md:py-6 pointer-events-none">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between pointer-events-auto">
         {/* Logo Placeholder */}
         <a href="#home" className="w-12 h-12 bg-black/80 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-lg">
           🐸
@@ -62,8 +62,11 @@ const Navbar = () => {
           >
             Get in touch
           </a>
-          <button className="w-12 h-12 bg-black/80 rounded-full flex items-center justify-center text-white hover:bg-black transition-colors shadow-lg">
-            <Volume2 size={20} />
+          <button 
+            onClick={() => setIsMuted(!isMuted)}
+            className={`w-12 h-12 rounded-full flex items-center justify-center text-white transition-colors shadow-lg ${isMuted ? 'bg-red-500 hover:bg-red-600' : 'bg-black/80 hover:bg-black'}`}
+          >
+            {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
           </button>
         </div>
       </div>

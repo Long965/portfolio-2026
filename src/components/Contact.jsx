@@ -74,6 +74,45 @@ const WavingGrass = () => (
   </div>
 );
 
+// Glowing Animated Sun in the sky
+const Sun = () => {
+  return (
+    <div className="absolute top-8 right-8 md:top-14 md:right-28 z-0 pointer-events-none">
+      {/* Outer ambient glow */}
+      <div className="absolute -inset-10 bg-yellow-300/30 rounded-full blur-3xl animate-pulse" />
+      
+      {/* Sun Core */}
+      <motion.div 
+        animate={{ scale: [1, 1.06, 1] }}
+        transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+        className="relative w-28 h-28 md:w-36 md:h-36 rounded-full bg-gradient-to-tr from-amber-400 via-yellow-300 to-yellow-100 shadow-[0_0_60px_rgba(250,204,21,0.9)] flex items-center justify-center"
+      >
+        {/* Rotating Sun Rays */}
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
+          className="absolute inset-0 flex items-center justify-center"
+        >
+          {[...Array(12)].map((_, i) => (
+            <div 
+              key={i} 
+              className="absolute w-2 md:w-2.5 h-36 md:h-48 bg-gradient-to-t from-transparent via-yellow-300/40 to-transparent rounded-full"
+              style={{ transform: `rotate(${i * 30}deg)` }}
+            />
+          ))}
+        </motion.div>
+      </motion.div>
+
+      {/* Floating soft cloud */}
+      <motion.div 
+        animate={{ x: [-8, 8, -8] }}
+        transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+        className="absolute -bottom-3 -left-10 w-24 md:w-32 h-8 md:h-10 bg-white/80 backdrop-blur-sm rounded-full shadow-md"
+      />
+    </div>
+  );
+};
+
 const Contact = () => {
   const socials = [
     { icon: Mail, href: "mailto:ltlong2020st@gmail.com" },
@@ -83,7 +122,10 @@ const Contact = () => {
   ];
 
   return (
-    <section id="contact" className="h-screen bg-[#f4ece3] relative overflow-hidden flex items-center">
+    <section id="contact" className="h-screen bg-gradient-to-b from-[#0284c7] via-[#38bdf8] to-[#bae6fd] relative overflow-hidden flex items-center">
+      {/* Radiant Sun in the sky */}
+      <Sun />
+
       <div className="max-w-7xl mx-auto px-6 md:px-20 w-full flex flex-col md:flex-row items-center justify-between relative z-10">
         
         {/* Left Content */}
@@ -92,7 +134,7 @@ const Contact = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-6xl md:text-8xl font-bold text-black/20 leading-[1.1] tracking-tighter mb-12"
+            className="text-6xl md:text-8xl font-bold text-white drop-shadow-[0_4px_16px_rgba(2,132,199,0.5)] leading-[1.1] tracking-tighter mb-12"
           >
             Let's work
             <br />
@@ -112,12 +154,12 @@ const Contact = () => {
                 <a 
                   key={idx}
                   href={social.href}
-                  className="flex items-center gap-4 bg-white/40 backdrop-blur-md p-4 rounded-2xl hover:bg-white/60 transition-all shadow-lg hover:shadow-xl group"
+                  className="flex items-center gap-4 bg-white/80 backdrop-blur-md p-4 rounded-2xl hover:bg-white transition-all shadow-lg hover:shadow-xl group border border-white/60"
                 >
                   <div className="bg-black/80 p-3 rounded-full text-white group-hover:scale-110 group-hover:bg-orange-500 transition-all">
                     <Icon size={24} />
                   </div>
-                  <span className="font-bold text-xl text-black/70 group-hover:text-black transition-colors">
+                  <span className="font-bold text-xl text-slate-800 group-hover:text-black transition-colors">
                     {social.href.replace('mailto:', '').replace('https://', '').replace('tel:', '')}
                   </span>
                 </a>
@@ -131,8 +173,8 @@ const Contact = () => {
       {/* Right Content - 3D Scene */}
       <div className="w-full md:w-1/2 h-[50vh] md:h-screen absolute right-0 bottom-0 cursor-grab active:cursor-grabbing z-10">
         <Canvas camera={{ position: [5, 4, 8], fov: 45 }}>
-          <ambientLight intensity={0.8} />
-          <directionalLight position={[10, 10, 5]} intensity={1} castShadow />
+          <ambientLight intensity={0.9} />
+          <directionalLight position={[10, 10, 5]} intensity={1.5} castShadow />
           <SportsEquipment />
           <OrbitControls enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 4} />
         </Canvas>
