@@ -1,66 +1,118 @@
-# Portfolio Lý Tiểu Long - 3D Interactive Website
+# 🌟 Ly Tieu Long - Interactive 3D Developer Portfolio
 
-Chào mừng đến với dự án web portfolio mang phong cách 3D (được truyền cảm hứng từ David Heckhoff). Dự án này được xây dựng với các công nghệ hiện đại bao gồm:
-- **React.js (Vite)**
-- **Tailwind CSS v4**
-- **Three.js & React Three Fiber** (dành cho các hiệu ứng 3D)
-- **Framer Motion** (dành cho các hiệu ứng chuyển động mượt mà)
+<div align="center">
 
-Dưới đây là hướng dẫn chi tiết để bạn có thể mở và chạy dự án này trực tiếp trên **Visual Studio Code (VS Code)**.
+  [![Live Demo](https://img.shields.io/badge/Live_Demo-Visit_Portfolio-brightgreen?style=for-the-badge&logo=vercel&logoColor=white)](https://portfolio-2026-git-main-long965.vercel.app/)
+  [![GitHub](https://img.shields.io/badge/GitHub-Profile-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Long965)
+  [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/long-lý-tiểu-100730400)
+  [![Email](https://img.shields.io/badge/Email-Contact_Me-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:ltlong2020st@gmail.com)
+
+  <br />
+
+  **A playful, high-performance 3D interactive portfolio website engineered with React, Three.js (React Three Fiber), Tailwind CSS, and Framer Motion.**
+
+  ### 🔗 **[Explore Live Website](https://portfolio-2026-git-main-long965.vercel.app/)**
+
+</div>
 
 ---
 
-## 🚀 Hướng dẫn chạy dự án trên VS Code
+## 👨‍💻 About Candidate
 
-### 1. Yêu cầu hệ thống
-Trước khi chạy, hãy đảm bảo máy tính của bạn đã cài đặt sẵn:
-- **Node.js** (Khuyến nghị phiên bản 18 trở lên). Bạn có thể kiểm tra bằng cách mở terminal và gõ `node -v`.
-- **VS Code** (Visual Studio Code).
+- **Candidate:** **Lý Tiểu Long** (Ly Tieu Long)
+- **Role:** Web Developer / Frontend & Full-Stack Engineer
+- **Specializations:** Interactive 3D Web Experiences, Modern Web Applications, AI & IoT Integrations
+- **Location:** Ho Chi Minh City, Vietnam
+- **Contact:** [ltlong2020st@gmail.com](mailto:ltlong2020st@gmail.com) | (+84) 083-258-2919
 
-### 2. Mở dự án trong VS Code
-1. Mở **VS Code**.
-2. Chọn **File > Open Folder...** (hoặc nhấn `Ctrl + K` sau đó `Ctrl + O`).
-3. Điều hướng tới thư mục chứa dự án: `D:\Antigravity\CV\portfolio` và chọn **Select Folder**.
+---
 
-### 3. Mở Terminal trong VS Code
-1. Trên thanh menu trên cùng của VS Code, chọn **Terminal > New Terminal** (hoặc dùng phím tắt `` Ctrl + ` ``).
-2. Terminal sẽ hiển thị ở nửa dưới màn hình với đường dẫn mặc định là thư mục `portfolio`.
+## 🚀 Key Highlights & Architectural Features
 
-### 4. Cài đặt thư viện (Chỉ cần làm lần đầu tiên)
-Trong cửa sổ Terminal vừa mở, gõ lệnh sau và nhấn **Enter**:
+### 1. 🖥️ Interactive 3D Hero Workspace (Page 1)
+- **Full-Screen WebGL Canvas:** Procedurally composed 3D developer desk featuring code syntax monitors, RGB LED keyboard, ergonomic chair, striped ceramic plant, and floating wall shelves.
+- **Unrestricted 360° Orbiting:** Built with `@react-three/fiber` and `@react-three/drei` OrbitControls, with camera target optimization ensuring zero edge-clipping.
+- **Bold Typography & Micro-interactions:** Playful slanted badges, smooth entrance transitions via Framer Motion.
+
+### 2. 🤖 Cosmic Galaxy & 3D Robot Centerpiece (Page 2)
+- **Animated 3D Companion Robot:** Custom-crafted floating robot with friendly waving kinematics, tilting visor, and glowing digital eyes.
+- **Orbital Planetary System:** 3 celestial orbits with spinning planets (including a Saturn-like ringed world) revolving in real-time around the robot.
+- **Dynamic Starfield & Shooting Stars:** 5,000-star rotating cosmic galaxy background complemented by flying shooting stars.
+
+### 3. 💼 Production-Grade Featured Projects (Page 3)
+- **Multimodal Fake News Detection:** AI-powered credibility scoring engine combining NLP, Computer Vision (Deepfake detection), FastAPI, PyTorch, and React.
+- **Smart Greenhouse System:** Full-stack IoT telemetry platform featuring sensor automation, climate control, and real-time dashboards.
+- **OEM EV Warranty Management:** Enterprise backend architecture for electric vehicle fleet warranties with Docker deployment.
+- **Crimes Alert Website:** Community crime reporting platform with interactive mapping and Role-Based Access Control (RBAC).
+- **"Start a New Project" Action Card:** Engaging dashed CTA inviting recruiters and clients to initiate collaboration directly.
+
+### 4. ☀️ Vibrant Outdoor Contact Meadow (Page 4)
+- **Continuous Auto-Rotating 3D Sports Gear:** Floating basketball, badminton racket, and shuttlecock rotating smoothly in real-time.
+- **Scenic Landscape:** Multilayered waving grass blades animated via procedural SVG curves under a sunny blue sky with a glowing sun and soft clouds.
+- **One-Click Contact Hub:** Instant channels to Email, LinkedIn, GitHub, and Phone.
+
+---
+
+## 🛠️ Technology Stack
+
+| Domain | Technologies & Libraries |
+| :--- | :--- |
+| **Core Framework** | React 19, Vite |
+| **3D & WebGL Engine** | Three.js, `@react-three/fiber`, `@react-three/drei` |
+| **Styling & Design** | Tailwind CSS v4, Custom CSS Animations |
+| **Motion & Physics** | Framer Motion |
+| **Icons & Typography** | Lucide React, Google Fonts (Fredoka) |
+| **Deployment & CI/CD** | Vercel (Continuous Deployment from GitHub) |
+
+---
+
+## 💻 Local Development Setup
+
+To run this project locally on your workstation:
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (version 18.x or later recommended)
+- `npm` or `yarn` or `pnpm`
+
+### Installation & Execution
+
 ```bash
+# 1. Clone the repository
+git clone https://github.com/Long965/portfolio.git
+
+# 2. Navigate to project directory
+cd portfolio
+
+# 3. Install dependencies
 npm install
-```
-*Lưu ý: Quá trình này sẽ mất một chút thời gian để tải về các thư viện cần thiết (React, Three.js, Tailwind,...). Hãy chờ cho đến khi tiến trình kết thúc (không còn chạy phần trăm).*
 
-### 5. Khởi chạy trang web
-Sau khi cài đặt xong, gõ lệnh sau vào Terminal và nhấn **Enter**:
-```bash
+# 4. Launch development server
 npm run dev
 ```
 
-### 6. Xem kết quả
-Khi lệnh trên chạy thành công, trong Terminal sẽ xuất hiện một dòng chữ tương tự như sau:
+Open your browser at `http://localhost:5173/` (or the port indicated in your terminal).
+
+### Production Build
+
+```bash
+npm run build
 ```
-  ➜  Local:   http://localhost:5173/
-```
-Bạn chỉ cần giữ phím **Ctrl** và **Click chuột trái** vào đường link `http://localhost:5173/`, trình duyệt web sẽ tự động mở ra và hiển thị trang portfolio của bạn.
+Generates an optimized, minified production build inside the `dist/` directory ready for deployment.
 
 ---
 
-## 🛠️ Một số lệnh hữu ích khác
+## 📬 Contact & Opportunities
 
-- **Tắt server**: Khi bạn muốn dừng chạy trang web, hãy nhấn chuột vào khu vực Terminal và bấm tổ hợp phím `Ctrl + C`, sau đó gõ `Y` (nếu máy hỏi) và nhấn Enter.
-- **Build dự án**: Nếu bạn muốn đóng gói code để chuẩn bị đẩy lên các hosting (như Vercel, Netlify, GitHub Pages), hãy chạy lệnh:
-  ```bash
-  npm run build
-  ```
-  Code hoàn chỉnh sẽ được xuất ra thư mục `dist`.
+I am currently open to **Software Engineer**, **Frontend Developer**, and **Full-Stack Developer** opportunities. Feel free to connect:
+
+- 🌐 **Portfolio Demo:** [https://portfolio-2026-git-main-long965.vercel.app/](https://portfolio-2026-git-main-long965.vercel.app/)
+- 📧 **Email:** [ltlong2020st@gmail.com](mailto:ltlong2020st@gmail.com)
+- 💼 **LinkedIn:** [linkedin.com/in/long-lý-tiểu-100730400](https://www.linkedin.com/in/long-lý-tiểu-100730400)
+- 🐙 **GitHub:** [github.com/Long965](https://github.com/Long965)
+- 📞 **Phone:** (+84) 083-258-2919
 
 ---
 
-## 🎨 Hướng dẫn tinh chỉnh (Dành cho nhà phát triển)
-- **Đổi thông tin**: Bạn có thể vào thư mục `src/components/` để sửa đổi text ở các file `Hero.jsx`, `About.jsx`, `Projects.jsx`, `Contact.jsx`.
-- **Thay mô hình 3D**: Nếu bạn có file mô hình 3D thiết kế riêng (định dạng `.glb`), bạn có thể import vào `React Three Fiber` thông qua hook `useGLTF()` để thay thế cho các khối trừu tượng hiện tại.
-
-Chúc bạn có một trải nghiệm code tuyệt vời!
+<div align="center">
+  <sub>Designed & Developed with ❤️ by <strong>Lý Tiểu Long</strong>. Powered by React & Three.js.</sub>
+</div>
