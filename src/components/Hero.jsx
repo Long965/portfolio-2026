@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Box, Cylinder, Text, RoundedBox, Cone } from '@react-three/drei';
 import { motion } from 'framer-motion';
@@ -188,28 +188,28 @@ const RGBKeyboard = () => {
 // Simulated Syntax Highlighting Code Lines
 const CodeLines = () => {
   const lines = [
-    { width: 0.6, color: '#f472b6', y: 0 },
-    { width: 0.8, color: '#f472b6', y: -0.08 },
-    { width: 0.4, color: '#f472b6', y: -0.16 },
-    { width: 0.7, color: '#a3e635', y: -0.24 },
-    { width: 0.9, color: '#a3e635', y: -0.32 },
-    { width: 0.6, color: '#a3e635', y: -0.40 },
-    { width: 0.8, color: '#fb923c', y: -0.48 },
-    { width: 0.5, color: '#fb923c', y: -0.56 },
-    { width: 0.9, color: '#9ca3af', y: -0.72 }, // gap before
-    { width: 0.6, color: '#c084fc', y: -0.80 },
-    { width: 0.8, color: '#c084fc', y: -0.88 },
-    { width: 1.2, color: '#fbbf24', y: -0.96 }, // long yellow line
-    { width: 0.5, color: '#fb923c', y: -1.04 },
-    { width: 0.7, color: '#a3e635', y: -1.2 },
-    { width: 0.6, color: '#a3e635', y: -1.28 },
-    { width: 0.4, color: '#f472b6', y: -1.36 },
+    { width: 0.5, color: '#f472b6', y: 0 },
+    { width: 0.7, color: '#f472b6', y: -0.055 },
+    { width: 0.35, color: '#f472b6', y: -0.11 },
+    { width: 0.6, color: '#a3e635', y: -0.165 },
+    { width: 0.8, color: '#a3e635', y: -0.22 },
+    { width: 0.55, color: '#a3e635', y: -0.275 },
+    { width: 0.7, color: '#fb923c', y: -0.33 },
+    { width: 0.45, color: '#fb923c', y: -0.385 },
+    { width: 0.75, color: '#9ca3af', y: -0.47 },
+    { width: 0.55, color: '#c084fc', y: -0.525 },
+    { width: 0.7, color: '#c084fc', y: -0.58 },
+    { width: 1.05, color: '#fbbf24', y: -0.635 }, // long yellow line
+    { width: 0.45, color: '#fb923c', y: -0.69 },
+    { width: 0.65, color: '#a3e635', y: -0.76 },
+    { width: 0.5, color: '#a3e635', y: -0.815 },
+    { width: 0.35, color: '#f472b6', y: -0.87 },
   ];
 
   return (
-    <group position={[-0.8, 2.3, -0.42]} rotation={[0.05, 0, 0]}>
+    <group position={[-0.85, 0.45, 0.06]}>
       {lines.map((line, i) => (
-        <Box key={i} args={[line.width, 0.03, 0.01]} position={[line.width / 2, line.y, 0]}>
+        <Box key={i} args={[line.width, 0.025, 0.01]} position={[line.width / 2, line.y, 0]}>
           <meshBasicMaterial color={line.color} />
         </Box>
       ))}
@@ -252,23 +252,33 @@ const AbstractDesk = () => {
         <meshStandardMaterial color="#fbcfe8" />
       </Cylinder>
       
-      {/* Monitor Base */}
-      <Box args={[0.4, 0.05, 0.3]} position={[0, 1.12, -0.5]}>
-        <meshStandardMaterial color="#374151" />
-      </Box>
-      <Cylinder args={[0.05, 0.05, 0.4]} position={[0, 1.3, -0.5]}>
-        <meshStandardMaterial color="#4b5563" />
-      </Cylinder>
-      {/* Monitor Screen */}
-      <RoundedBox args={[2.2, 1.4, 0.1]} radius={0.05} position={[0, 1.8, -0.5]} rotation={[0.05, 0, 0]}>
-        <meshStandardMaterial color="#374151" />
-      </RoundedBox>
-      <Box args={[2.1, 1.3, 0.11]} position={[0, 1.8, -0.5]} rotation={[0.05, 0, 0]}>
-        <meshStandardMaterial color="#1f2937" />
-      </Box>
-      
-      {/* Code on screen */}
-      <CodeLines />
+      {/* Monitor Assembly - Sturdily elevated above desk */}
+      <group position={[0, 1.1, -0.5]}>
+        {/* Base on Desk */}
+        <RoundedBox args={[0.6, 0.03, 0.35]} radius={0.01} position={[0, 0.015, 0]}>
+          <meshStandardMaterial color="#374151" roughness={0.3} metalness={0.4} />
+        </RoundedBox>
+        {/* Sturdy Stand Neck */}
+        <Cylinder args={[0.045, 0.05, 0.7, 16]} position={[0, 0.35, -0.06]}>
+          <meshStandardMaterial color="#4b5563" roughness={0.3} metalness={0.5} />
+        </Cylinder>
+        {/* Mounting Hinge */}
+        <Box args={[0.2, 0.2, 0.05]} position={[0, 0.65, -0.06]}>
+          <meshStandardMaterial color="#1f2937" />
+        </Box>
+
+        {/* Elevated Monitor Screen Frame */}
+        <group position={[0, 0.95, 0]} rotation={[0.02, 0, 0]}>
+          <RoundedBox args={[2.2, 1.35, 0.08]} radius={0.04} position={[0, 0, 0]}>
+            <meshStandardMaterial color="#1f2937" roughness={0.3} metalness={0.2} />
+          </RoundedBox>
+          <Box args={[2.1, 1.25, 0.09]} position={[0, 0, 0]}>
+            <meshStandardMaterial color="#0f172a" roughness={0.2} />
+          </Box>
+          {/* Code Lines cleanly inside screen */}
+          <CodeLines />
+        </group>
+      </group>
 
       {/* Keyboard */}
       <RGBKeyboard />
@@ -428,20 +438,29 @@ const AbstractDesk = () => {
 };
 
 const Hero = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <section id="home" className="h-screen bg-[#f4ece3] relative overflow-hidden flex items-center">
       
       {/* Full-width 3D Canvas - completely eliminates rug clipping when rotated */}
       <div className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing z-0">
-        <Canvas camera={{ position: [6.8, 4.2, 6.2], fov: 48 }}>
+        <Canvas camera={{ position: isMobile ? [4.5, 4.2, 7.5] : [6.5, 4.2, 6.2], fov: isMobile ? 55 : 48 }}>
           <ambientLight intensity={0.7} />
           <directionalLight position={[10, 10, 5]} intensity={1.5} castShadow />
-          {/* Positioned significantly further to the right */}
-          <group position={[3.7, 0.25, 0]}>
+          {/* Positioned centered on mobile, right side on desktop */}
+          <group position={isMobile ? [0, -0.7, 0] : [3.6, 0.25, 0]}>
             <AbstractDesk />
           </group>
           <OrbitControls 
-            target={[2.7, 0.25, 0]} 
+            target={isMobile ? [0, -0.7, 0] : [2.6, 0.25, 0]} 
             enableZoom={false} 
             maxPolarAngle={Math.PI / 2} 
             minPolarAngle={Math.PI / 4} 
@@ -450,23 +469,23 @@ const Hero = () => {
       </div>
 
       {/* Left Content Overlay */}
-      <div className="relative z-10 w-full h-full max-w-7xl mx-auto px-6 md:px-12 flex items-center pointer-events-none">
-        <div className="w-full md:w-[50%] flex flex-col items-start pointer-events-auto mt-20 md:mt-0">
+      <div className="relative z-10 w-full h-full max-w-7xl mx-auto px-6 md:px-12 flex items-start md:items-center pointer-events-none pt-24 md:pt-0">
+        <div className="w-full md:w-[50%] flex flex-col items-start pointer-events-auto">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="flex flex-col items-start -ml-2 md:-ml-8"
+            className="flex flex-col items-start ml-0 md:-ml-8"
           >
-            <h1 className="text-7xl md:text-[8rem] font-bold text-gray-800 leading-[0.8] tracking-tighter mb-8">
+            <h1 className="text-5xl sm:text-6xl md:text-[8rem] font-bold text-gray-800 leading-[0.9] md:leading-[0.8] tracking-tighter mb-4 md:mb-8">
               Ly Tieu
               <br />
               Long
             </h1>
             
-            <div className="bg-[#1e3a5f] border-4 border-yellow-500 text-white px-6 py-3 rounded-xl shadow-2xl transform -rotate-2">
-              <span className="text-xl md:text-2xl font-bold tracking-widest uppercase">
-                Lập Trình Viên Web
+            <div className="bg-[#1e3a5f] border-2 md:border-4 border-yellow-500 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl shadow-2xl transform -rotate-2">
+              <span className="text-base sm:text-xl md:text-2xl font-bold tracking-widest uppercase">
+                Full Stack Development
               </span>
             </div>
           </motion.div>

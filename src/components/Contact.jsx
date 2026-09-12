@@ -125,19 +125,19 @@ const Contact = () => {
   ];
 
   return (
-    <section id="contact" className="h-screen bg-gradient-to-b from-[#0284c7] via-[#38bdf8] to-[#bae6fd] relative overflow-hidden flex items-center">
+    <section id="contact" className="min-h-screen md:h-screen bg-gradient-to-b from-[#0284c7] via-[#38bdf8] to-[#bae6fd] relative overflow-hidden flex flex-col md:flex-row items-center justify-between py-16 md:py-0 px-4 md:px-0">
       {/* Radiant Sun in the sky */}
       <Sun />
 
-      <div className="max-w-7xl mx-auto px-6 md:px-20 w-full flex flex-col md:flex-row items-center justify-between relative z-10">
+      <div className="max-w-7xl mx-auto px-2 md:px-20 w-full flex flex-col md:flex-row items-center justify-between relative z-10">
         
         {/* Left Content */}
-        <div className="w-full md:w-1/2 flex flex-col items-start pt-20 md:pt-0">
+        <div className="w-full md:w-1/2 flex flex-col items-start pt-12 md:pt-0">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-6xl md:text-8xl font-bold text-white drop-shadow-[0_4px_16px_rgba(2,132,199,0.5)] leading-[1.1] tracking-tighter mb-12"
+            className="text-5xl sm:text-7xl md:text-8xl font-bold text-white drop-shadow-[0_4px_16px_rgba(2,132,199,0.5)] leading-[1.05] tracking-tighter mb-8 md:mb-12"
           >
             Let's work
             <br />
@@ -149,7 +149,7 @@ const Contact = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="flex flex-col gap-6 w-full max-w-md"
+            className="flex flex-col gap-4 md:gap-6 w-full max-w-md"
           >
             {socials.map((social, idx) => {
               const Icon = social.icon;
@@ -157,12 +157,12 @@ const Contact = () => {
                 <a 
                   key={idx}
                   href={social.href}
-                  className="flex items-center gap-4 bg-white/80 backdrop-blur-md p-4 rounded-2xl hover:bg-white transition-all shadow-lg hover:shadow-xl group border border-white/60"
+                  className="flex items-center gap-3.5 md:gap-4 bg-white/85 backdrop-blur-md p-3.5 md:p-4 rounded-2xl hover:bg-white transition-all shadow-lg hover:shadow-xl group border border-white/60"
                 >
-                  <div className="bg-black/80 p-3 rounded-full text-white group-hover:scale-110 group-hover:bg-orange-500 transition-all">
-                    <Icon size={24} />
+                  <div className="bg-black/80 p-2.5 md:p-3 rounded-full text-white group-hover:scale-110 group-hover:bg-orange-500 transition-all shrink-0">
+                    <Icon size={20} className="md:w-6 md:h-6" />
                   </div>
-                  <span className="font-bold text-xl text-slate-800 group-hover:text-black transition-colors">
+                  <span className="font-bold text-base sm:text-lg md:text-xl text-slate-800 group-hover:text-black transition-colors truncate">
                     {social.href.replace('mailto:', '').replace('https://', '').replace('tel:', '')}
                   </span>
                 </a>
@@ -173,8 +173,8 @@ const Contact = () => {
 
       </div>
 
-      {/* Right Content - 3D Scene */}
-      <div className="w-full md:w-1/2 h-[50vh] md:h-screen absolute right-0 bottom-0 cursor-grab active:cursor-grabbing z-10">
+      {/* Right Content - 3D Scene (Responsive for mobile & desktop) */}
+      <div className="w-full md:w-1/2 h-64 sm:h-80 md:h-screen relative md:absolute md:right-0 md:bottom-0 cursor-grab active:cursor-grabbing z-10 mt-6 md:mt-0">
         <Canvas camera={{ position: [5, 4, 8], fov: 45 }}>
           <ambientLight intensity={0.9} />
           <directionalLight position={[10, 10, 5]} intensity={1.5} castShadow />

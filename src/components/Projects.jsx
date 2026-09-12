@@ -77,21 +77,21 @@ const Projects = () => {
   ];
 
   return (
-    <section id="projects" className="py-32 px-6 md:px-20 bg-[#322319] min-h-screen">
+    <section id="projects" className="py-20 md:py-32 px-4 sm:px-8 md:px-20 bg-[#322319] min-h-screen">
       <div className="max-w-7xl mx-auto">
         
         {/* Header */}
-        <div className="mb-20 flex flex-col items-start relative pl-4 md:pl-0">
-          <div className="bg-[#2563eb] text-white px-4 py-1 rounded-md transform -rotate-6 absolute -top-4 -left-4 shadow-lg z-10">
-            <span className="text-sm font-bold uppercase tracking-wider">Selected</span>
+        <div className="mb-12 md:mb-20 flex flex-col items-start relative pl-2 md:pl-0">
+          <div className="bg-[#2563eb] text-white px-3 md:px-4 py-1 rounded-md transform -rotate-6 absolute -top-3 md:-top-4 -left-2 md:-left-4 shadow-lg z-10">
+            <span className="text-xs md:text-sm font-bold uppercase tracking-wider">🐸🐸🐸🐸</span>
           </div>
-          <h2 className="text-6xl md:text-8xl font-bold text-[#f4ece3] leading-none tracking-tighter ml-2 mt-4">
+          <h2 className="text-5xl sm:text-7xl md:text-8xl font-bold text-[#f4ece3] leading-none tracking-tighter ml-2 mt-4">
             Projects
           </h2>
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-x-12 md:gap-y-16">
           {projects.map((project, index) => (
             <ProjectCard key={index} {...project} />
           ))}

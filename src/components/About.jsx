@@ -280,11 +280,11 @@ const RotatingGalaxyBackground = () => {
 
 const About = () => {
   return (
-    <section id="about" className="h-screen bg-[#061839] relative overflow-hidden flex items-center justify-center">
+    <section id="about" className="min-h-screen md:h-screen bg-[#061839] relative overflow-hidden flex flex-col items-center justify-center py-20 md:py-0">
       {/* Grid Pattern */}
       <div className="bg-grid-pattern opacity-30"></div>
       
-      {/* 3D Canvas */}
+      {/* Single 3D Canvas - serves both mobile and desktop cleanly without WebGL context loss */}
       <div className="absolute inset-0 cursor-grab active:cursor-grabbing z-0">
         <Canvas camera={{ position: [0, 0.5, 7], fov: 45 }}>
           <ambientLight intensity={0.9} />
@@ -309,9 +309,8 @@ const About = () => {
         </Canvas>
       </div>
 
-      {/* Floating Info Cards */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto h-full pointer-events-none">
-        
+      {/* DESKTOP LAYOUT - Floating Holographic Cards */}
+      <div className="hidden md:block relative z-10 w-full max-w-6xl mx-auto h-full pointer-events-none">
         {/* Profile Card */}
         <motion.div 
           initial={{ opacity: 0, x: -50 }}
@@ -324,7 +323,6 @@ const About = () => {
             <MapPin size={20} />
             <span>Ho Chi Minh, Vietnam</span>
           </div>
-          {/* Line pointing to center */}
           <div className="absolute top-1/2 -right-16 w-16 h-[2px] bg-[#0ea5e9]/50 hidden md:block">
             <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0ea5e9] shadow-[0_0_10px_#0ea5e9]"></div>
           </div>
@@ -342,7 +340,6 @@ const About = () => {
             Information Technology student specializing in Cybersecurity and Software Engineering. 
             Builds interactive web applications and full-stack systems that are fast, secure, and user-friendly.
           </p>
-          {/* Line pointing to center */}
           <div className="absolute top-1/2 -right-16 w-16 h-[2px] bg-[#0ea5e9]/50 hidden md:block">
             <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0ea5e9] shadow-[0_0_10px_#0ea5e9]"></div>
           </div>
@@ -370,13 +367,61 @@ const About = () => {
               </li>
             ))}
           </ul>
-          {/* Line pointing to center */}
           <div className="absolute top-1/2 -left-16 w-16 h-[2px] bg-[#0ea5e9]/50 hidden md:block">
             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0ea5e9] shadow-[0_0_10px_#0ea5e9]"></div>
           </div>
         </motion.div>
-        
       </div>
+
+      {/* MOBILE LAYOUT - Clean Non-overlapping Cards overlay */}
+      <div className="md:hidden relative z-10 w-full px-4 flex flex-col items-center gap-4 pointer-events-none mt-40">
+        <div className="bg-[#0ea5e9]/20 text-[#38bdf8] text-xs font-bold px-3 py-1 rounded-full backdrop-blur-sm border border-[#38bdf8]/30 self-center pointer-events-auto">
+
+        </div>
+
+        {/* Profile Card Mobile */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="w-full max-w-md bg-[#082a5c]/90 backdrop-blur-md border border-[#0ea5e9]/50 p-5 rounded-2xl shadow-xl pointer-events-auto"
+        >
+          <h2 className="text-2xl font-bold text-white mb-1">Ly Tieu Long</h2>
+          <div className="flex items-center gap-2 text-[#0ea5e9] font-medium text-sm">
+            <MapPin size={18} />
+            <span>Ho Chi Minh, Vietnam</span>
+          </div>
+          <p className="text-white/90 text-xs sm:text-sm font-medium leading-relaxed mt-3 pt-3 border-t border-white/10">
+            Information Technology student specializing in Cybersecurity and Software Engineering. 
+            Builds interactive web applications and full-stack systems that are fast, secure, and user-friendly.
+          </p>
+        </motion.div>
+
+        {/* Skills Card Mobile */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="w-full max-w-md bg-[#082a5c]/90 backdrop-blur-md border border-[#0ea5e9]/50 p-5 rounded-2xl shadow-xl pointer-events-auto"
+        >
+          <h3 className="text-lg font-bold text-white mb-3">Core Skills</h3>
+          <ul className="space-y-2.5">
+            {[
+              "C++, Python & JavaScript",
+              "Node.js & PHP",
+              "PostgreSQL & MySQL",
+              "React (Vite) & FastAPI",
+              "AI Integration (OpenCV, PyTorch)"
+            ].map((skill, idx) => (
+              <li key={idx} className="flex items-center gap-2.5 text-white/90 text-xs sm:text-sm font-medium">
+                <span className="w-2 h-2 bg-[#0ea5e9] rounded-full shadow-[0_0_8px_#0ea5e9]"></span>
+                {skill}
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+      </div>
+
     </section>
   );
 };
