@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Volume2, VolumeX } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const Navbar = ({ isMuted, setIsMuted }) => {
+const Navbar = () => {
   const [activeSection, setActiveSection] = useState('home');
 
   const navLinks = [
@@ -58,16 +57,10 @@ const Navbar = ({ isMuted, setIsMuted }) => {
         <div className="flex items-center gap-4">
           <a 
             href="#contact"
-            className="hidden md:inline-block px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-full text-sm font-bold transition-colors uppercase tracking-wider shadow-xl shadow-orange-500/30"
+            className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-full text-sm font-bold transition-colors uppercase tracking-wider shadow-xl shadow-orange-500/30"
           >
             Get in touch
           </a>
-          <button 
-            onClick={() => setIsMuted(!isMuted)}
-            className={`w-12 h-12 rounded-full flex items-center justify-center text-white transition-colors shadow-lg ${isMuted ? 'bg-red-500 hover:bg-red-600' : 'bg-black/80 hover:bg-black'}`}
-          >
-            {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-          </button>
         </div>
       </div>
     </nav>

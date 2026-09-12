@@ -46,17 +46,17 @@ const CuteRobot = () => {
   const leftArmRef = useRef();
   const rightArmRef = useRef();
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     const t = state.clock.elapsedTime;
-    // Gentle floating bob
+    // Gentle floating bob + continuous 360-degree smooth rotation!
     if (robotRef.current) {
       robotRef.current.position.y = Math.sin(t * 1.5) * 0.2;
-      robotRef.current.rotation.y = Math.sin(t * 0.6) * 0.25;
+      robotRef.current.rotation.y += delta * 0.6; // Auto 360 rotation
     }
-    // Head tilt
+    // Head tilt and lively looking around
     if (headRef.current) {
-      headRef.current.rotation.y = Math.sin(t * 1.2) * 0.15;
-      headRef.current.rotation.z = Math.cos(t * 0.9) * 0.05;
+      headRef.current.rotation.y = Math.sin(t * 1.8) * 0.25;
+      headRef.current.rotation.z = Math.cos(t * 1.2) * 0.08;
     }
     // Arms animation
     if (leftArmRef.current) {
@@ -175,6 +175,109 @@ const CuteRobot = () => {
   );
 };
 
+// Orbiting planetary system & galaxy rings revolving around the central robot
+const OrbitingGalaxies = () => {
+  const orbit1 = useRef();
+  const orbit2 = useRef();
+  const orbit3 = useRef();
+  const planet1 = useRef();
+  const planet2 = useRef();
+  const planet3 = useRef();
+  const galaxySpiral = useRef();
+
+  useFrame((state, delta) => {
+    // Orbits around the robot
+    if (orbit1.current) orbit1.current.rotation.z += delta * 1.1;
+    if (orbit2.current) orbit2.current.rotation.z -= delta * 0.75;
+    if (orbit3.current) orbit3.current.rotation.z += delta * 0.5;
+    if (galaxySpiral.current) {
+      galaxySpiral.current.rotation.z += delta * 0.35;
+      galaxySpiral.current.rotation.y += delta * 0.2;
+    }
+    // Self-spin of each planet
+    if (planet1.current) planet1.current.rotation.y += delta * 2;
+    if (planet2.current) planet2.current.rotation.y += delta * 1.5;
+    if (planet3.current) planet3.current.rotation.y += delta * 1.8;
+  });
+
+  return (
+    <group position={[0, 0, 0]}>
+      {/* Orbit 1 - Cyan Planet */}
+      <group rotation={[0.6, 0.3, 0.2]}>
+        <Torus args={[2.5, 0.015, 16, 100]}>
+          <meshBasicMaterial color="#38bdf8" transparent opacity={0.35} />
+        </Torus>
+        <group ref={orbit1}>
+          <mesh ref={planet1} position={[2.5, 0, 0]}>
+            <sphereGeometry args={[0.18, 24, 24]} />
+            <meshStandardMaterial color="#38bdf8" emissive="#0284c7" emissiveIntensity={2.5} />
+          </mesh>
+        </group>
+      </group>
+
+      {/* Orbit 2 - Purple Planet with its own mini Saturn ring */}
+      <group rotation={[-0.5, 0.4, -0.4]}>
+        <Torus args={[3.4, 0.015, 16, 100]}>
+          <meshBasicMaterial color="#c084fc" transparent opacity={0.35} />
+        </Torus>
+        <group ref={orbit2}>
+          <group ref={planet2} position={[3.4, 0, 0]}>
+            <mesh>
+              <sphereGeometry args={[0.22, 24, 24]} />
+              <meshStandardMaterial color="#a855f7" emissive="#7e22ce" emissiveIntensity={2} />
+            </mesh>
+            <mesh rotation={[1, 0, 0]}>
+              <torusGeometry args={[0.35, 0.03, 16, 32]} />
+              <meshBasicMaterial color="#e9d5ff" transparent opacity={0.8} />
+            </mesh>
+          </group>
+        </group>
+      </group>
+
+      {/* Orbit 3 - Golden Amber Star/Planet */}
+      <group rotation={[0.8, -0.5, 0.5]}>
+        <Torus args={[4.2, 0.015, 16, 100]}>
+          <meshBasicMaterial color="#fbbf24" transparent opacity={0.3} />
+        </Torus>
+        <group ref={orbit3}>
+          <mesh ref={planet3} position={[4.2, 0, 0]}>
+            <sphereGeometry args={[0.16, 24, 24]} />
+            <meshStandardMaterial color="#f59e0b" emissive="#d97706" emissiveIntensity={2.5} />
+          </mesh>
+        </group>
+      </group>
+
+      {/* Rotating Galaxy spiral rings around Robot */}
+      <group ref={galaxySpiral} rotation={[Math.PI / 3.5, 0.2, 0]}>
+        <Torus args={[2.9, 0.035, 16, 64]}>
+          <meshBasicMaterial color="#38bdf8" transparent opacity={0.4} />
+        </Torus>
+        <Torus args={[3.8, 0.025, 16, 64]}>
+          <meshBasicMaterial color="#818cf8" transparent opacity={0.3} />
+        </Torus>
+      </group>
+    </group>
+  );
+};
+
+// Cosmic starfield that rotates continuously around the scene
+const RotatingGalaxyBackground = () => {
+  const starsRef = useRef();
+
+  useFrame((state, delta) => {
+    if (starsRef.current) {
+      starsRef.current.rotation.y += delta * 0.05;
+      starsRef.current.rotation.x += delta * 0.015;
+    }
+  });
+
+  return (
+    <group ref={starsRef}>
+      <Stars radius={60} depth={60} count={5000} factor={5} saturation={0.6} fade speed={1.5} />
+    </group>
+  );
+};
+
 const About = () => {
   return (
     <section id="about" className="h-screen bg-[#061839] relative overflow-hidden flex items-center justify-center">
@@ -187,10 +290,22 @@ const About = () => {
           <ambientLight intensity={0.9} />
           <directionalLight position={[5, 8, 5]} intensity={1.5} />
           <pointLight position={[0, 0, 2]} intensity={2} color="#38bdf8" />
+          {/* Central 3D Robot */}
           <CuteRobot />
+          {/* Orbiting Galaxies & Planets revolving around Robot */}
+          <OrbitingGalaxies />
+          {/* Shooting Stars */}
           <ShootingStars />
-          <Stars radius={50} depth={50} count={3000} factor={4} saturation={0} fade speed={1} />
-          <OrbitControls enableZoom={false} maxPolarAngle={Math.PI / 2 + 0.2} minPolarAngle={Math.PI / 3} />
+          {/* Continuously Rotating Starfield / Galaxy Background */}
+          <RotatingGalaxyBackground />
+          {/* Full 360-degree spherical orbit controls (left/right and up/down) */}
+          <OrbitControls 
+            enableZoom={false} 
+            minPolarAngle={0} 
+            maxPolarAngle={Math.PI} 
+            enableDamping 
+            dampingFactor={0.05} 
+          />
         </Canvas>
       </div>
 

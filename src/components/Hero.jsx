@@ -429,41 +429,48 @@ const AbstractDesk = () => {
 
 const Hero = () => {
   return (
-    <section id="home" className="h-screen bg-[#f4ece3] flex flex-col md:flex-row items-center justify-between px-4 md:pl-2 md:pr-8 overflow-hidden relative">
+    <section id="home" className="h-screen bg-[#f4ece3] relative overflow-hidden flex items-center">
       
-      {/* Left Content */}
-      <div className="w-full md:w-[50%] z-10 flex flex-col justify-center h-full relative pl-0 mt-20 md:mt-0">
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          className="flex flex-col items-start ml-0 md:-ml-44"
-        >
-          <h1 className="text-7xl md:text-[8rem] font-bold text-gray-800 leading-[0.8] tracking-tighter mb-8">
-            Ly Tieu
-            <br />
-            Long
-          </h1>
-          
-          <div className="bg-[#1e3a5f] border-4 border-yellow-500 text-white px-6 py-3 rounded-xl shadow-2xl transform -rotate-2">
-            <span className="text-xl md:text-2xl font-bold tracking-widest uppercase">
-              Lập Trình Viên Web
-            </span>
-          </div>
-        </motion.div>
-      </div>
-      
-      {/* Right Content - 3D Scene */}
-      <div className="w-full md:w-[52%] h-[60vh] md:h-screen absolute right-0 md:-right-6 bottom-0 md:-top-8 cursor-grab active:cursor-grabbing z-0">
-        <Canvas camera={{ position: [5, 4, 6], fov: 50 }}>
+      {/* Full-width 3D Canvas - completely eliminates rug clipping when rotated */}
+      <div className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing z-0">
+        <Canvas camera={{ position: [6.8, 4.2, 6.2], fov: 48 }}>
           <ambientLight intensity={0.7} />
           <directionalLight position={[10, 10, 5]} intensity={1.5} castShadow />
-          {/* Shifted up (Y) and left (X/Z) */}
-          <group position={[-0.4, 0.35, 0.2]}>
+          {/* Positioned significantly further to the right */}
+          <group position={[3.7, 0.25, 0]}>
             <AbstractDesk />
           </group>
-          <OrbitControls enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 4} />
+          <OrbitControls 
+            target={[2.7, 0.25, 0]} 
+            enableZoom={false} 
+            maxPolarAngle={Math.PI / 2} 
+            minPolarAngle={Math.PI / 4} 
+          />
         </Canvas>
+      </div>
+
+      {/* Left Content Overlay */}
+      <div className="relative z-10 w-full h-full max-w-7xl mx-auto px-6 md:px-12 flex items-center pointer-events-none">
+        <div className="w-full md:w-[50%] flex flex-col items-start pointer-events-auto mt-20 md:mt-0">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col items-start -ml-2 md:-ml-8"
+          >
+            <h1 className="text-7xl md:text-[8rem] font-bold text-gray-800 leading-[0.8] tracking-tighter mb-8">
+              Ly Tieu
+              <br />
+              Long
+            </h1>
+            
+            <div className="bg-[#1e3a5f] border-4 border-yellow-500 text-white px-6 py-3 rounded-xl shadow-2xl transform -rotate-2">
+              <span className="text-xl md:text-2xl font-bold tracking-widest uppercase">
+                Lập Trình Viên Web
+              </span>
+            </div>
+          </motion.div>
+        </div>
       </div>
 
     </section>

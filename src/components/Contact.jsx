@@ -5,13 +5,16 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Box, Cylinder, Torus, Sphere, Cone } from '@react-three/drei';
 import * as THREE from 'three';
 
-// A playful 3D stack of sports equipment
+// A playful 3D stack of sports equipment with continuous auto-rotation
 const SportsEquipment = () => {
   const group = useRef();
-  useFrame((state) => {
-    // Base gentle floating rotation
-    const time = state.clock.elapsedTime;
-    group.current.rotation.y = Math.sin(time * 0.2) * 0.05;
+  useFrame((state, delta) => {
+    if (group.current) {
+      // Continuous automatic 360-degree spin
+      group.current.rotation.y += delta * 0.8;
+      // Gentle floating bob
+      group.current.position.y = -1 + Math.sin(state.clock.elapsedTime * 1.5) * 0.12;
+    }
   });
 
   return (
@@ -176,7 +179,13 @@ const Contact = () => {
           <ambientLight intensity={0.9} />
           <directionalLight position={[10, 10, 5]} intensity={1.5} castShadow />
           <SportsEquipment />
-          <OrbitControls enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 4} />
+          <OrbitControls 
+            enableZoom={false} 
+            autoRotate 
+            autoRotateSpeed={2} 
+            maxPolarAngle={Math.PI / 2} 
+            minPolarAngle={Math.PI / 4} 
+          />
         </Canvas>
       </div>
 
