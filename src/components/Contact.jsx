@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Link as LinkIcon, Globe, Phone } from 'lucide-react';
 import { Canvas, useFrame } from '@react-three/fiber';
@@ -117,6 +117,15 @@ const Sun = () => {
 };
 
 const Contact = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const socials = [
     { icon: Mail, href: "mailto:ltlong2020st@gmail.com" },
     { icon: LinkIcon, href: "https://github.com/Long965" },
@@ -173,14 +182,15 @@ const Contact = () => {
 
       </div>
 
-      {/* Right Content - 3D Scene (Responsive for mobile & desktop) */}
-      <div className="w-full md:w-1/2 h-64 sm:h-80 md:h-screen relative md:absolute md:right-0 md:bottom-0 cursor-grab active:cursor-grabbing z-10 mt-6 md:mt-0">
+      {/* Right Content - 3D Scene (Responsive for mobile & desktop, non-blocking on mobile) */}
+      <div className="w-full md:w-1/2 h-64 sm:h-80 md:h-screen relative md:absolute md:right-0 md:bottom-0 pointer-events-none md:pointer-events-auto cursor-grab active:cursor-grabbing z-10 mt-6 md:mt-0" style={{ touchAction: 'pan-y' }}>
         <Canvas camera={{ position: [5, 4, 8], fov: 45 }}>
           <ambientLight intensity={0.9} />
           <directionalLight position={[10, 10, 5]} intensity={1.5} castShadow />
           <SportsEquipment />
           <OrbitControls 
             enableZoom={false} 
+            enableRotate={!isMobile}
             autoRotate 
             autoRotateSpeed={2} 
             maxPolarAngle={Math.PI / 2} 

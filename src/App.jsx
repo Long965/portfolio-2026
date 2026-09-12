@@ -4,6 +4,7 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
+import MusicPlayer from './components/MusicPlayer';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Projects />
         <Contact />
       </main>
+      <MusicPlayer />
       
       <footer className="bg-slate-950 py-8 text-center text-slate-500 text-sm">
         <p>&copy; {new Date().getFullYear()} Ly Tieu Long. All rights reserved.</p>

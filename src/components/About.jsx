@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, RoundedBox, Cylinder, Sphere, Cone, Torus, Stars } from '@react-three/drei';
@@ -279,13 +279,22 @@ const RotatingGalaxyBackground = () => {
 };
 
 const About = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <section id="about" className="min-h-screen md:h-screen bg-[#061839] relative overflow-hidden flex flex-col items-center justify-center py-20 md:py-0">
       {/* Grid Pattern */}
       <div className="bg-grid-pattern opacity-30"></div>
       
-      {/* Single 3D Canvas - serves both mobile and desktop cleanly without WebGL context loss */}
-      <div className="absolute inset-0 cursor-grab active:cursor-grabbing z-0">
+      {/* Single 3D Canvas - non-blocking on mobile for fluid scrolling */}
+      <div className="absolute inset-0 pointer-events-none md:pointer-events-auto cursor-grab active:cursor-grabbing z-0" style={{ touchAction: 'pan-y' }}>
         <Canvas camera={{ position: [0, 0.5, 7], fov: 45 }}>
           <ambientLight intensity={0.9} />
           <directionalLight position={[5, 8, 5]} intensity={1.5} />
@@ -301,6 +310,7 @@ const About = () => {
           {/* Full 360-degree spherical orbit controls (left/right and up/down) */}
           <OrbitControls 
             enableZoom={false} 
+            enableRotate={!isMobile}
             minPolarAngle={0} 
             maxPolarAngle={Math.PI} 
             enableDamping 

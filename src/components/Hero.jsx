@@ -221,7 +221,13 @@ const CodeLines = () => {
 const AbstractDesk = () => {
   const group = useRef();
   useFrame((state) => {
-    group.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.2) * 0.1;
+    if (group.current) {
+      const t = state.clock.elapsedTime;
+      // Chuyển động cực kỳ chậm rãi và êm dịu, lắc nhẹ chỉ ~2.8 độ
+      group.current.rotation.y = Math.sin(t * 0.3) * 0.05;
+      // Nhấp nhô siêu nhẹ tạo cảm giác bồng bềnh tự nhiên
+      group.current.position.y = -1.5 + Math.sin(t * 0.4) * 0.01;
+    }
   });
 
   return (
@@ -450,8 +456,8 @@ const Hero = () => {
   return (
     <section id="home" className="h-screen bg-[#f4ece3] relative overflow-hidden flex items-center">
       
-      {/* Full-width 3D Canvas - completely eliminates rug clipping when rotated */}
-      <div className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing z-0">
+      {/* Full-width 3D Canvas - non-blocking on mobile for smooth finger scrolling */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none md:pointer-events-auto cursor-grab active:cursor-grabbing z-0" style={{ touchAction: 'pan-y' }}>
         <Canvas camera={{ position: isMobile ? [4.5, 4.2, 7.5] : [6.5, 4.2, 6.2], fov: isMobile ? 55 : 48 }}>
           <ambientLight intensity={0.7} />
           <directionalLight position={[10, 10, 5]} intensity={1.5} castShadow />
@@ -462,6 +468,7 @@ const Hero = () => {
           <OrbitControls 
             target={isMobile ? [0, -0.7, 0] : [2.6, 0.25, 0]} 
             enableZoom={false} 
+            enableRotate={!isMobile}
             maxPolarAngle={Math.PI / 2} 
             minPolarAngle={Math.PI / 4} 
           />
